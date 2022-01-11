@@ -85,7 +85,7 @@ jobs:
         with:
           deliverables: app.dev.yaml
           project_id: ${{ env.PROJECT_ID }}
-          credentials: ${{ steps.secrets.outputs..DEPLOY_TOKEN }}
+          credentials: ${{ steps.secrets.outputs.DEPLOY_TOKEN }}
           promote: false
           version: ${{ env.RELEASE_VERSION }}
 
