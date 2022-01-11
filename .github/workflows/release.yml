@@ -1,0 +1,54 @@
+name: Create a new release
+
+on:
+  workflow_dispatch:
+    branches:
+      - develop
+      - main
+    inputs:
+      version:
+        description: 'Version number, for example: v1.0.0 or v1.0.0-snapshot.1'
+        required: true
+
+env:
+  NODE_VERSION: 12.x
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Create release with version bump
+    steps:
+      - name: Check input version
+        run: |
+          if ! [[ ${{ github.event.inputs.version }} =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-snapshot\.[0-9]+)?$ ]]; then
+            echo "The version number supplied has not the right format: ${{ github.event.inputs.version }}"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Update version
+        run: |
+          # Use the default github-action credentials to commit the version as it will not trigger any other worklows.
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git checkout -b release/${{ github.event.inputs.version }}
+          npm version --no-git-tag-version ${{ github.event.inputs.version }}
+          git commit -a -m "chore(version): bump version to ${{ github.event.inputs.version }}"
+          git push -u origin release/${{ github.event.inputs.version }}
+
+      - name: Create a GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          prerelease: ${{ contains(github.event.inputs.version, 'snapshot') }}
+          commitish: ${{ needs.bump-version.outputs.new_sha }}

@@ -1,0 +1,29 @@
+{
+  "name": "vuetestci",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GaelMei/VueTestCI.git"
+  },
+  "author": "Gaël Meignen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GaelMei/VueTestCI/issues"
+  },
+  "homepage": "https://github.com/GaelMei/VueTestCI#readme",
+  "dependencies": {
+    "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "@vue/cli-service": "^4.5.15",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
