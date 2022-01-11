@@ -54,8 +54,7 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
-            GITHUB_TOKEN:${{ env.PROJECT_ID }}/github_token ;
-            DEPLOY_TOKEN:${{ env.PROJECT_ID }}/deploy_token ;
+            DEPLOY_TOKEN:projects/${{ env.PROJECT_ID }}/secrets/deploy_token/versions/latest ;
 
       - name: node_modules cache
         uses: actions/cache@v2
