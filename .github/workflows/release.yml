@@ -12,6 +12,7 @@ on:
 
 env:
   NODE_VERSION: 12.x
+  GITHUB_TOKEN: ''
 
 jobs:
   release:
@@ -27,6 +28,17 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GAE_CREDENTIALS}}'
+
+      - id: 'secrets'
+        uses: 'google-github-actions/get-secretmanager-secrets@v0'
+        with:
+          secrets: |-
+            GITHUB_TOKEN:${{ PROJECT_ID }}/github_token ;
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2
@@ -46,7 +58,7 @@ jobs:
       - name: Create a GitHub release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.secrets.outputs.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.event.inputs.version }}
           release_name: Release ${{ github.event.inputs.version }}
