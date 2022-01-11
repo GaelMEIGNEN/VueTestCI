@@ -12,7 +12,7 @@ on:
 
 env:
   NODE_VERSION: 12.x
-  GITHUB_TOKEN: ''
+  PROJECT_ID: hubvisory-game
 
 jobs:
   release:
@@ -38,7 +38,7 @@ jobs:
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
-            GITHUB_TOKEN:${{ PROJECT_ID }}/github_token ;
+            GITHUB_TOKEN:${{ env.PROJECT_ID }}/github_token ;
 
       - name: Set up Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v2

@@ -16,9 +16,8 @@ on:
       - ready_for_review
 
 env:
-  NODE_VERSION: '12.x'
-  PROJECT_ID: 'hubvisory-game'
-  DEPLOY_TOKEN: ''
+  NODE_VERSION: 12.x
+  PROJECT_ID: hubvisory-game
 
 jobs:
   dependencies:
@@ -49,14 +48,14 @@ jobs:
       - id: 'auth'
         uses: 'google-github-actions/auth@v0'
         with:
-          credentials_json: '${{'
+          credentials_json: '${{ secrets.GAE_CREDENTIALS}}'
 
       - id: 'secrets'
         uses: 'google-github-actions/get-secretmanager-secrets@v0'
         with:
           secrets: |-
-            GITHUB_TOKEN:${{ PROJECT_ID }}/github_token ;
-            DEPLOY_TOKEN:${{ PROJECT_ID }}/deploy_token ;
+            GITHUB_TOKEN:${{ env.PROJECT_ID }}/github_token ;
+            DEPLOY_TOKEN:${{ env.PROJECT_ID }}/deploy_token ;
 
       - name: node_modules cache
         uses: actions/cache@v2
@@ -87,7 +86,7 @@ jobs:
         with:
           deliverables: app.dev.yaml
           project_id: ${{ env.PROJECT_ID }}
-          credentials: ${{ env.DEPLOY_TOKEN }}
+          credentials: ${{ steps.secrets.outputs..DEPLOY_TOKEN }}
           promote: false
           version: ${{ env.RELEASE_VERSION }}
 
@@ -97,6 +96,6 @@ jobs:
         with:
           deliverables: app.prod.yaml
           project_id: ${{ env.PROJECT_ID }}
-          credentials: ${{ env.DEPLOY_TOKEN }}
+          credentials: ${{ steps.secrets.outputs.DEPLOY_TOKEN }}
           promote: false
           version: ${{ env.RELEASE_VERSION }}
